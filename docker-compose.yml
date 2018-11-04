@@ -1,6 +1,6 @@
 version: '2.1'
 services:
-  test-server:
+  receiver:
     build:
       context: .
       dockerfile: test-server.Dockerfile
@@ -11,13 +11,13 @@ services:
       interval: 2s
       timeout: 1s
       retries: 5
-  nginx:
+  sender:
     build: .
     ports:
       - "80:80"
     environment:
-      - FORWARD_LOGS_URL=ws://test-server:8080/
+      - FORWARD_LOGS_URL=ws://receiver:8080/
       - FORWARD_LOGS_DEBUG=true
     depends_on:
-      test-server:
+      receiver:
         condition: service_healthy
